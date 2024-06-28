@@ -1,0 +1,44 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" id="emp_form">
+                    {% csrf_token%}
+
+                    <h4 class="card-title"> Routes </h4>
+                          <div class="table-responsive">
+                    <table class="table table-striped project-orders-table">
+                        <thead>
+                        <tr>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                          </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+
+
+                    <h4 class="card-title">Upload Excel File</h4>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ upload_form.as_p }}
+                        <button class="file-upload-browse btn btn-primary" name="upload_emp" type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

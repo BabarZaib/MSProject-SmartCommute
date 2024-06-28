@@ -1,0 +1,51 @@
+{% extends "users/emp_dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+ <div class="row">
+         <div class="col-12 grid-margin">
+             <form action="{% url 'execute_model'%}" class="forms-sample" method="POST">
+              <div class="card">
+                <div class="card-body">
+                  {% csrf_token%}
+
+                  <h2 class="card-title">Change Requests</h2>
+                    <div class="table-responsive">
+                  <table class="table">
+    <thead>
+        <tr>
+            <th>Request Type</th>
+            <th>Change Details</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in change_requests %}
+        <tr>
+            <td>{{ request.get_request_type_display }}</td>
+            <td>{{ request.old_value }} -> {{ request.new_value }}</td>
+            <td><label class="badge badge-danger">{{ request.get_status_display }}</label></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+                        </div>
+                </div></div></form>
+         </div>
+ </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>
+
+
+
+

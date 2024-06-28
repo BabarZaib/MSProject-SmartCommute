@@ -1,0 +1,36 @@
+{% extends "users/emp_dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+  <div class="row">
+         <div class="col-12 grid-margin">
+
+              <div class="card">
+                <div class="card-body">
+                  {% csrf_token%}
+
+                  <h2 class="card-title">Change Request Form</h2>
+
+ <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+                </div></div>
+         </div></div>
+</div>
+{% endblock %}
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration</title>
+    <!-- Add any CSS or Bootstrap links here -->
+</head>
+<body>
+    <h1>Admin Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ admin_form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

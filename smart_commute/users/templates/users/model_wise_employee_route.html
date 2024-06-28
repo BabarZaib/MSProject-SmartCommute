@@ -1,0 +1,342 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+
+
+
+
+  <div class="container">
+    <div class="row">
+        <div class="col-12 grid-margin">
+              <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        <h4 class="card-title">Model Data</h4>
+                        <form action="{% url 'model_wise_employee_route'%}" method="POST" >
+                            {% csrf_token %}
+                      <!--  <p class="card-description">Model</p>-->
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Model </label>
+                                    <select name="model" id="id_model" class="form-control">
+                                        <option value="all">All</option>
+                                        {% for model_comb_sel in model_combinations%}
+                                            <option {%if model_comb_sel == model_comb %} selected {% endif %}
+                                                    value="{{model_comb_sel.id}}">{{model_comb_sel}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        <!--    <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Route Type : {{data.type_id.value}}</label>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" id="filter_btn" class="btn btn-primary mr-2">Filter</button>
+                            </div>
+                        </div>
+                            </form>
+                  <!--      <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label"># of Vehicles</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="no_of_vehicles" id="no_of_vehicles" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Capacity/Vehicle</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="capacity" id="capacity" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        {% if model_comb %}
+                        <p class="card-description">Parameters</p>
+                        <div class="row">
+                            <table class="table">
+                                <tr>
+                                <th>
+                                    Shift
+                                </th><th>
+                                    Route Type
+                                </th><th>
+                                    First Level Algorithm
+                                </th><th>
+                                    Second Level Algorithm
+                                </th><th>
+                                    Analysis
+                                </th>
+                                </tr>
+                                <Tr>
+                                    <td>{{model_comb.shift}}</td>
+                                    <td>{{model_comb.type_id}}</td>
+                                    <td>{{model_comb.first_level_algo}}</td>
+                                    <td>{{model_comb.second_level_algo}}</td>
+                                    <td></td>
+                                </Tr>
+                            </table>
+                            <!--<div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Shift : </label>
+
+                                    <div class="col-sm-9">
+                                        <label class="col-sm-3 col-form-label">{{model_comb.shift}} </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Route Type : </label>
+                                    <div class="col-sm-9">
+                                          <label class="col-sm-3 col-form-label">{{model_comb.type_id}}</label>
+
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+
+                     <!--   <p class="card-description">Algorithm</p>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Level Algorithm :</label>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-6 col-form-label">{{model_comb.first_level_algo}}</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Second Level Algorithm : </label>
+                                    <div class="col-sm-3">
+                                        <label class="col-sm-6 col-form-label">{{model_comb.second_level_algo}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Analysis: </label>
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-6 col-form-label">{{model_comb.analysis}}</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">Results</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Route #</th>
+                                    <th>Employee</th>
+                                    <th>Sequence #</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in model_wise_data %}
+                                <tr>
+                                    <td class="text-wrap col-md-3">{{ data.model_comb }}</td>
+                                    <td class="text-wrap">{{ data.vehicle.id }}</td>
+                                    <td class="text-wrap">{{ data.employee }}</td>
+                                    <td class="text-wrap">
+                                        {{ data.sequence_no }}
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+            <!--
+            <form action="{% url 'execute_model' %}" class="forms-sample" method="POST">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        <h4 class="card-title">Execute Model</h4>
+                        <p class="card-description">Parameters</p>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label"># of Vehicles</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="no_of_vehicles" id="no_of_vehicles" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Capacity/Vehicle</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="capacity" id="capacity" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Shift</label>
+                                    <div class="col-sm-9">
+                                        <select required name="shift" id="shift" class="form-control">
+                                            <option value="">-&#45;&#45;Select Shift-&#45;&#45;</option>
+                                            {% for shift in shifts %}
+                                            <option value="{{shift.id}}">{{shift.name}} ( {{shift.slab}} )</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Route</label>
+                                    <div class="col-sm-9">
+                                        <select required name="route_type" id="route_type" class="form-control">
+                                            <option value="pick">Pick-Up</option>
+                                            <option value="drop">Drop-Off</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-description">Algorithm</p>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Level Algorithm</label>
+                                    <div class="col-sm-9">
+                                        <select required name="first_level_algorithm" id="first_level_algorithm" class="form-control">
+                                            <option value="">-&#45;&#45;Select-&#45;&#45;</option>
+
+                                            <option value="kmeans">K-Means</option>
+                                            <option value="min-first">min-first</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Second Level Algorithm</label>
+                                    <div class="col-sm-9">
+                                          <select required name="second_level_algorithm" id="second_level_algorithm" class="form-control">
+                                            <option value="">-&#45;&#45;Select-&#45;&#45;</option>
+
+                                            <option value="TSP">TSP</option>
+                                            <option value="ACO">ACO</option>
+                                            <option value="google">Google Optimisation</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" id="execute_btn" class="btn btn-primary mr-2">Execute</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">Results</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Distance</th>
+                                    <th>Time</th>
+                                    <th>List of Employees</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in data_list %}
+                                <tr>
+                                    <td>{{ data.vehicle }}</td>
+                                    <td>{{ data.distance }}</td>
+                                    <td>{{ data.time }}</td>
+                                    <td class="text-wrap" id="coordinates_{{ data.vehicle }}">
+                                        {{ data.employees }}
+                                    </td>
+                                    <td>
+                                        <button type="button" id="view_route_btn" class="btn btn-success mr-2" onclick="viewOnMap({{ data.coordinates }})">View on Map</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Select Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                     <div id="map" style="height: 600px; width: 100%;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
+
+
+
+
+{% endblock %}
+
+</body>
+</html>

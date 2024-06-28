@@ -1,0 +1,52 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+  <form action="{% url 'vehicle_form'%}" class="forms-sample" method="POST">
+        <div class="row">
+         <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  {% csrf_token%}
+
+                  <h4 class="card-title">Vehicle Registration Form</h4>
+
+                    <p class="card-description">
+                      Vehicle info
+                    </p>
+                    {{ form.as_p }}
+
+                    <div class="row">
+                       <div class="col-md-12">
+                           {% if edit_vehicle %}
+                            <input type="hidden" name="id" value="{{vehicle_id}}">
+                                               <button type="submit" name="update" class="btn btn-primary mr-2">Update</button>
+
+                           {% else %}
+                                               <button type="submit" class="btn btn-primary mr-2">Save</button>
+
+                           {% endif %}
+                    <div class="btn btn-light">
+                                  <a href="{% url 'vehicle_list' %}" class="text-decoration-none text-dark">Cancel</a>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+         </div>
+        </div>
+  </form>
+
+
+</div>
+
+{% endblock %}
+
+</body>
+</html>

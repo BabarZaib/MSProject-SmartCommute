@@ -1,0 +1,111 @@
+{% extends "users/emp_dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" id="emp_form">
+                    {% csrf_token%}
+
+                    <h4 class="card-title"> Routes </h4>
+                    <h4 class="card-title"> Date : {{current_date}}</h4>
+                             <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-wrap">
+                                    Vehicle
+                                </td>
+                                <td class="text-wrap">
+                                    {{path_data.vehicle}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Distance
+                                </td>
+                                <td class="text-wrap">
+                                    {{path_data.distance}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Time
+                                </td>
+                                <td class="text-wrap">
+                                    {{path_data.time}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Route
+                                </td>
+                                <td class="text-wrap">
+                                    <button TYPE="button" id="view_route_btn" class="btn btn-success mr-2"
+                                            onclick="viewOnMap({{path_data.coordinates}})">View on Map</button>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-wrap">
+                                    Driver Name
+                                </td>
+                                <td class="text-wrap">
+                                    {{driver.name}}
+                                </td>
+                            </tr>  <tr>
+                                <td class="text-wrap">
+                                    Driver Contact #
+                                </td>
+                                <td class="text-wrap">
+                                    {{driver.contact_number}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                             </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Select Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                     <div id="map" style="height: 600px; width: 100%;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+</body>
+</html>

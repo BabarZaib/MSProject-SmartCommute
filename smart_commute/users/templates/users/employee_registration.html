@@ -1,0 +1,337 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+     <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+{% block content %}
+<div class="content-wrapper">
+  <form action="{% url 'employee_registration'%}" method="POST">
+          <div class="row">
+         <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  {% csrf_token%}
+
+                  <h4 class="card-title">Employee Registration Form</h4>
+
+                    <p class="card-description">
+                      Personal info
+                    </p>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Employee Code</label>
+                          <div class="col-sm-9">
+                             <input type="text" name="employee_code"
+                                    maxlength="10" placeholder="Employee code"
+                                    class="form-control" required="" id="id_employee_code" readonly
+                                    {% if edit_employee %}   value="{{employee_form.employee_code.value}}" {%else%} value="{{emp_id}}"{% endif %}>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">First Name</label>
+                          <div class="col-sm-9">
+                           {{ employee_form.first_name}}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Last Name</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.last_name }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                       <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Gender</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.gender }}
+                          </div>
+                        <!--  <div class="col-sm-4">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked="">
+                                Free
+                              <i class="input-helper"></i></label>
+                            </div>
+                          </div>-->
+                          <!--<div class="col-sm-5">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2">
+                                Professional
+                              <i class="input-helper"></i></label>
+                            </div>
+                          </div>-->
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Department</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.department }}
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                      <div class="row">
+                       <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Job Title</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.job_title }}
+                          </div>
+                        <!--  <div class="col-sm-4">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked="">
+                                Free
+                              <i class="input-helper"></i></label>
+                            </div>
+                          </div>-->
+                          <!--<div class="col-sm-5">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2">
+                                Professional
+                              <i class="input-helper"></i></label>
+                            </div>
+                          </div>-->
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Location</label>
+                          <div class="col-sm-9">
+                                {{employee_form.location}}
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                       <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Shift</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.shift }}
+                          </div>
+                        </div>
+                      </div>
+                  <!--    <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Location</label>
+                          <div class="col-sm-9">
+                                {{employee_form.location}}
+                          </div>
+                        </div>
+                      </div>-->
+
+                    </div>
+
+                    <p class="card-description">
+                      Address
+                    </p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Address 1</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.address1 }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">State</label>
+                          <div class="col-sm-9">
+                             {{ employee_form.state }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Address 2</label>
+                          <div class="col-sm-9">
+                             {{ employee_form.address2 }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Postcode</label>
+                          <div class="col-sm-9">
+                             {{ employee_form.postcode }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group row">
+                                         <label class="col-sm-3 col-form-label">Coordinates</label>
+                                         <div class="col-sm-9">
+                                       {{ employee_form.coordinates }}
+                                         </div>
+                                    </div>
+                                </div>
+                               <!-- <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group mb-3 ">
+                                        {{form.pickup_city}}
+                                    </div>
+                                </div>-->
+                            </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">City</label>
+                          <div class="col-sm-9">
+                            {{ employee_form.city }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Country</label>
+                          <div class="col-sm-9">
+                             {{ employee_form.country }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {%if not edit_employee %}
+                    <p class="card-description">
+                      Account Information
+                    </p>
+                  <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Email</label>
+                          <div class="col-sm-9">
+                            {{ user_form.email }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Username</label>
+                          <div class="col-sm-9">
+                             {{ user_form.username }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Password</label>
+                          <div class="col-sm-9">
+                            {{ user_form.password1 }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Confirm Password</label>
+                          <div class="col-sm-9">
+                             {{ user_form.password2 }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                      <div class="row">
+     <div class="col-md-12">
+       <div class="form-group row">
+                          <div class="col-sm-9">
+                                 {% if edit_employee %}
+                              <input type="hidden" name="emp_id" value="{{emp_id}}">
+                              {% endif %}
+                            <input type="submit" class="btn btn-primary"  {%if edit_employee %} value="Update" name="update" {%else%} value="Save" name="save" {% endif%} >
+
+                              <div class="btn btn-light">
+                                  <a href="{% url 'all_employees' %}" class="text-decoration-none text-dark">Cancel</a>
+                              </div>
+                          </div>
+                        </div>
+     </div>
+  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+  </form>
+</div>
+
+
+<!--
+   <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMapModal()">X</span>
+            <div id="map"></div>
+        </div>
+    </div>
+-->
+   <!-- <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMapModal()">X</span>
+
+        </div>
+    </div>-->
+
+   <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Select Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                     <div id="map" style="height: 400px; width: 100%;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+</body>
+</html>
+   <!-- <h1>Employee Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ employee_form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+-->

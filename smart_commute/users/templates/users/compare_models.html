@@ -1,0 +1,221 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+ <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Model 1</h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+                      <select class="form-control" name="model_comb1" id="id_model_comb1">
+                          <option value="">Select Model Combination 1</option>
+                          {% for model_comb in model_combs%}
+                          <option value="{{model_comb.id}}">{{model_comb}}</option>
+                          {% endfor %}
+                      </select>
+                      <hr>
+ <br>                      <p class="card-description">Analysis</p>
+
+
+
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Model 2</h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+                      <select class="form-control" name="model_comb2" id="id_model_comb2" onchange="fetch_routes(this.value, 'id_route2')">
+                          <option value="">Select Model Combination 2</option>
+                          {% for model_comb in model_combs%}
+                          <option value="{{model_comb.id}}">{{model_comb}}</option>
+                          {% endfor %}
+                      </select>
+                                            <hr>
+ <br>                      <p class="card-description">Analysis</p>
+
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+ </div>
+
+
+    <div class="row">
+
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Route 1</h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+                      <select class="form-control" name="route1" id="id_route1" onchange="fetch_vehicle_wise_details('id_model_comb1','id_route1' , this.value)">
+                          <option value="">Select Route</option>
+                          {% for route in routes%}
+                          <option value="{{route.id}}">{{route}}</option>
+                          {% endfor %}
+                      </select>
+                      <hr>
+ <br>                      <p class="card-description">Details</p>
+
+
+
+                   <ul class="list-ticked">
+                       <li>Distance : <span id="id_route1_distance"> </span></li>
+                       <li>Time     :  <span id="id_route1_time"></span></li>
+
+                  </ul>
+                                             <button class="btn btn-primary" > <a class="text-decoration-none text-light" id="id_route1_URL" href="" target="_blank" >View Route</a></button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Route 2</h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+                      <select class="form-control" name="route2" id="id_route2" onchange="fetch_vehicle_wise_details('id_model_comb2','id_route2',this.value)">
+                          <option value="">Select Route</option>
+                          {% for route in routes%}
+                          <option value="{{route.id}}">{{route}}</option>
+                          {% endfor %}
+                      </select>
+                                            <hr>
+ <br>                      <p class="card-description">Details</p>
+
+
+                   <ul class="list-ticked">
+                  <li id="id_route2_distance">Distance: </li>
+                  <li id="id_route2_time">Time : </li>
+                  </ul>
+                      <button class="btn btn-primary" > <a class="text-decoration-none text-light" id="id_route2_URL" href="" target="_blank" >View Route</a></button>
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+ </div>
+
+        <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+             <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                         <h4 class="card-title">Employee: </h4>
+                        <!--<div class="col-3"> Employee: </div>-->
+                        <div class="col-9">
+         <select class="form-control" name="route1" id="id_employees" onchange="fetch_route_details(this)">
+                          <option value="">Select Employee</option>
+                          {% for employee in employee_list %}
+                          <option value="{{employee.id}}">{{employee}}</option>
+                          {% endfor %}
+                      </select>
+                            </div>
+                    </div>
+
+                </div>
+             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title"></h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+                      <p class="card-description">Model 1</p>
+
+                   <ul class="list-ticked">
+                    <li>Route/Vehicle    : <span id="route_model1" > </span>     </li>
+                    <li>Sequence    : <span id="seq_model1" > </span>     </li>
+                    <li>Distance: <span id="distance_model1" > </span>  </li>
+                    <li>Time :    <span id="duration_model1" > </span>  </li>
+                  </ul>
+                      <button class="btn btn-primary" >View Route</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title"></h4>
+                 <!-- <p class="card-description">
+                    Add tags <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> or class <code>.h1</code> to <code>.h6</code>
+                  </p>-->
+                  <div class="template-demo">
+
+                      <p class="card-description">Model 2</p>
+
+
+                   <ul class="list-ticked">
+                    <li>Route/Vehicle       :   <span id="route_model2" > </span>    </li>
+                        <li>Sequence    : <span id="seq_model2" > </span>     </li>
+                    <li>Distance            :   <span id="distance_model2" > </span> </li>
+                    <li>Duration            :   <span id="duration_model2" > </span> </li>
+                  </ul>
+                      <button class="btn btn-primary" >View Route</button>
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+ </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>
+
+
+
+

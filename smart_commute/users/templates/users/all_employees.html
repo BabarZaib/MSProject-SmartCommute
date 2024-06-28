@@ -1,0 +1,76 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" id="emp_form">
+                    {% csrf_token%}
+
+                    <h4 class="card-title"> Employees List </h4>
+                          <div class="table-responsive">
+                    <table class="table table-hover project-orders-table">
+                        <thead>
+                        <tr  class="table-bordered">
+                        <!--    <th class="ml-5">ID</th>-->
+                            <th>Employee Code</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Department</th>
+                            <th>Job Title</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for employee in employees %}
+
+
+                        <tr>
+                          <!--  <td>{{employee.id}}</td>-->
+                            <td>{{employee.employee_code}}</td>
+                            <td>{{employee.first_name}}</td>
+                            <td>{{employee.last_name}}</td>
+                            <td>{{employee.department}}</td>
+                            <td>{{employee.job_title}}</td>
+                            <td>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button name="edit_emp" id="edit_emp" onclick="edit_employee({{employee.id}})"
+                                       class="btn btn-success btn-sm btn-icon-text mr-3">
+                                        Edit
+                                        <i class="typcn typcn-edit btn-icon-append"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm btn-icon-text">
+                                        Delete
+                                        <i class="typcn typcn-delete-outline btn-icon-append"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+
+                          </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

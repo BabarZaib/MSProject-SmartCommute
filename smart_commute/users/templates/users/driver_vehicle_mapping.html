@@ -1,0 +1,54 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> Vehicle Driver Mapping </h4>
+
+                <form method="post">
+        {% csrf_token %}
+                      <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Driver</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle, form in vehicle_form_pairs %}
+                <tr>
+                    <td>{{ vehicle.registration_no }} ({{ vehicle.model }})</td>
+                    <td>
+                        {{ form.driver }}
+                        <input class="form-control" type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+                      </div>
+                    <br>
+            <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

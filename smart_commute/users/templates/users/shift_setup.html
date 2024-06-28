@@ -1,0 +1,116 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" id="emp_form">
+                    {% csrf_token%}
+
+                    <h4 class="card-title"> Shift Setup </h4>
+                          <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr  class="table-bordered">
+                            <!--<th class="ml-5">ID</th>-->
+                            <th>Shift ID</th>
+                            <th>Name</th>
+                            <th>Slab</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for shift in shifts %}
+
+
+                        <tr>
+                            <!--<td>{{shift.id}}</td>-->
+                            <td>{{shift.shift_id}}</td>
+                            <td>{{shift.name}}</td>
+                            <td>{{shift.slab}}</td>
+                            <td>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type="button" name="show_edit_form" id="show_edit_form" onclick="show_update_form('form_{{shift.id}}')"
+                                       class="btn btn-success btn-sm btn-icon-text mr-3">
+                                        Edit
+                                        <i class="typcn typcn-edit btn-icon-append"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm btn-icon-text">
+                                        Delete
+                                        <i class="typcn typcn-delete-outline btn-icon-append"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <form method="POST" id="form_update" action="{% url 'shift_setup' %}">
+                            <input type="hidden" name="id" value="{{shift.id}}">
+                            {% csrf_token %}
+                         <tr id="form_{{shift.id}}" style="display: None;">
+                            <!--<td>{{shift.id}}</td>-->
+
+                            <td><input class="form-control" value="{{shift.shift_id}}" name="shift_id"></td>
+                            <td><input class="form-control" value="{{shift.name}}" name="name"> </td>
+                            <td><input class="form-control" value="{{shift.slab}}"  name="slab"></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <button type="submit" name="update" id="edit_shift_{{shift.id}}"
+                                       class="btn btn-success btn-sm btn-icon-text mr-3">
+                                        Update
+                                        <i class="typcn typcn-edit btn-icon-append"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm btn-icon-text">
+                                       Cancel
+                                        <i class="typcn typcn-delete-outline btn-icon-append"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                            </form>
+
+                        {% endfor %}
+
+                        <form  method="POST" action="{% url 'shift_setup' %}">
+                        <tr>
+                            <td>
+                                {{form.shift_id}}
+                            </td>
+                            <td>
+                                {{form.name}}
+                            </td>
+                            <td>
+                                {{form.slab}}
+                            </td><td>
+                                <button type="submit" name="save_btn" id="save_btn"
+                                       class="btn btn-success btn-sm btn-icon-text mr-3">
+                                        Save
+                                        <i class="typcn typcn-edit btn-icon-append"></i>
+                                    </button>
+                            </td>
+                        </tr>
+                        </form>
+                        </tbody>
+                    </table>
+                          </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

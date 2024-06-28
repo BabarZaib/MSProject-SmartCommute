@@ -1,0 +1,168 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+  <div class="container">
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <form action="{% url 'execute_model' %}" class="forms-sample" method="POST">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        <h4 class="card-title">Execute Model</h4>
+                        <p class="card-description">Parameters</p>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label"># of Vehicles</label>
+                                    <div class="col-sm-9">
+                                        <input required type="text" name="no_of_vehicles" id="no_of_vehicles" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Capacity/Vehicle</label>
+                                    <div class="col-sm-9">
+                                        <input required type="text" name="capacity" id="capacity" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Shift</label>
+                                    <div class="col-sm-9">
+                                        <select required name="shift" id="shift" class="form-control">
+                                            <option value="">---Select Shift---</option>
+                                            {% for shift in shifts %}
+                                            <option value="{{shift.id}}">{{shift.name}} ( {{shift.slab}} )</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Route</label>
+                                    <div class="col-sm-9">
+                                        <select required name="route_type" id="route_type" class="form-control">
+                                            <option value="pick">Pick-Up</option>
+                                            <option value="drop">Drop-Off</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-description">Algorithm</p>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Level Algorithm</label>
+                                    <div class="col-sm-9">
+                                        <select required name="first_level_algorithm" id="first_level_algorithm" class="form-control">
+                                            <option value="">---Select---</option>
+
+                                            <option value="kmeans">K-Means</option>
+                                            <option value="clarke">clarke_wright_savings</option>
+                                            <option value="min-first">min-first</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Second Level Algorithm</label>
+                                    <div class="col-sm-9">
+                                          <select required name="second_level_algorithm" id="second_level_algorithm" class="form-control">
+                                            <option value="">---Select---</option>
+
+                                            <option value="TSP">TSP</option>
+                                            <option value="ACO">ACO</option>
+                                            <option value="google">Google Optimisation</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" id="execute_btn" class="btn btn-primary mr-2">Execute</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">Results</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Distance (KM)</th>
+                                    <th>Time (Minutes)</th>
+                                    <th>List of Employees</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in data_list %}
+                                <tr>
+                                    <td>{{ data.vehicle }}</td>
+                                    <td>{{ data.distance }}</td>
+                                    <td>{{ data.time|floatformat:2 }} </td>
+                                    <td class="text-wrap" id="coordinates_{{ data.vehicle }}">
+                                        {{ data.employees }}
+                                    </td>
+                                    <td>
+                                        <button type="button" id="view_route_btn" class="btn btn-success mr-2" onclick="viewOnMap({{ data.coordinates }}, '{{route_type}}')">View on Map</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">Select Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                     <div id="map" style="height: 600px; width: 100%;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+</body>
+</html>

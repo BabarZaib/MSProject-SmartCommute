@@ -1,0 +1,70 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" id="emp_form">
+                    {% csrf_token%}
+
+                    <h2 class="card-title"> Driver List </h2>
+                          <div class="table-responsive">
+                    <table class="table table-hover ">
+                        <thead>
+                        <tr class="table-bordered">
+                            <th class="ml-5">ID</th>
+                            <th>Name</th>
+                            <th>Contact No</th>
+                            <th>License No</th>
+                            <th></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for driver in drivers %}
+
+
+                        <tr>
+                            <td>{{driver.id}}</td>
+                            <td>{{driver.name}}</td>
+                            <td>{{driver.contact_number}}</td>
+                            <td>{{driver.license_number}}</td>
+
+                           <td>
+    <div class="d-flex justify-content-end align-items-center">
+        <button name="edit_emp" id="edit_emp" class="btn btn-success btn-sm btn-icon-text mr-3">
+            Edit
+            <i class="typcn typcn-edit btn-icon-append"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm btn-icon-text">
+            Delete
+            <i class="typcn typcn-delete-outline btn-icon-append"></i>
+        </button>
+    </div>
+</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                          </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>
