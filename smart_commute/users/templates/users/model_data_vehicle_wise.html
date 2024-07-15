@@ -41,7 +41,11 @@
                     <h6>h6. Heading</h6>-->
                   </div>
                       <div class="table-responsive">
-        <table class="table table-bordered">
+
+                          <h4 class="card-description">Route : {{selected_vehicle.id}} - {{selected_vehicle}} </h4>
+                          <p class="card-description" >Pick</p>
+                          <br>
+        <table class="table table-bordered" id="table_pick">
             <thead>
                 <tr>
                     <th>Model Combinations</th>
@@ -61,7 +65,46 @@
                         <td>{{model_comb.path_data.duration|floatformat:2 }}</td>
                         <!--<td>{{model_comb.path_data.route_vertex_index}}</td>-->
                         <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
-                                                            target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div></td>
+                                                            target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
+                        </td><td>
+                         <input type="checkbox"
+           {% if selected_vehicle.path_data == model_comb.id %}checked{% endif %}
+           onchange="implementRoute('{{ model_comb.model_comb_id }}', 'pick', '{{ selected_vehicle.id }}')"
+           name="implement">
+                    </td>
+                    </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+
+
+                          <br>
+                          <p class="card-description" >Drop</p>
+        <table class="table table-bordered" id="table_drop">
+            <thead>
+                <tr>
+                    <th>Model Combinations</th>
+                    <th>Distance</th>
+                    <th>Duration</th>
+                   <!-- <th>Employees</th>-->
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                    {%for model_comb in model_combs_drop %}
+                    <tr>
+                        <td>{{model_comb}}</td>
+                        <td>{{model_comb.path_data.distance}}</td>
+                        <td>{{model_comb.path_data.duration|floatformat:2 }}</td>
+                        <!--<td>{{model_comb.path_data.route_vertex_index}}</td>-->
+                        <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
+                                                            target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
+                        </td><td><input type="checkbox"
+                                        {% if selected_vehicle.path_data_drop == model_comb.id %}checked{% endif %}
+                                        onchange="implementRoute({{model_comb.model_comb_id}}, 'drop', {{selected_vehicle.id}})"
+                                        name="implement"></td>
                     </tr>
             {%endfor%}
             </tbody>
@@ -69,6 +112,10 @@
                       </div>
                     <br>
            <!-- <button type="submit" class="btn btn-primary">Save</button>-->
+                            <input type="hidden" id="model_id" name="model_id">
+                            <input type="hidden" id="transit_type" name="transit_type">
+
+
     </form>
                 </div>
             </div>

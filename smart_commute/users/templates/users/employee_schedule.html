@@ -16,8 +16,10 @@
                     <form method="POST" id="emp_form">
                     {% csrf_token%}
 
-                    <h4 class="card-title"> Routes </h4>
+                    <h4 class="card-title"> Route Details </h4>
                     <h4 class="card-title"> Date : {{current_date}}</h4>
+
+                        <p class="card-description">Pick</p>
                              <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -31,7 +33,7 @@
                                     Vehicle
                                 </td>
                                 <td class="text-wrap">
-                                    {{path_data.vehicle}}
+                                    {{pick_vehicle.id}} - {{pick_vehicle}}
                                 </td>
                             </tr>
                             <tr>
@@ -39,7 +41,7 @@
                                     Distance
                                 </td>
                                 <td class="text-wrap">
-                                    {{path_data.distance}}
+                                    {{path_data_pick.distance}}
                                 </td>
                             </tr>
                             <tr>
@@ -47,18 +49,15 @@
                                     Time
                                 </td>
                                 <td class="text-wrap">
-                                    {{path_data.time}}
+                                    {{path_data_pick.duration}}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-wrap">
                                     Route
                                 </td>
-                                <td class="text-wrap">
-                                    <button TYPE="button" id="view_route_btn" class="btn btn-success mr-2"
-                                            onclick="viewOnMap({{path_data.coordinates}})">View on Map</button>
-
-                                </td>
+                                <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
+                                                            target="_blank" href="{{path_data_pick.URL}}">Map </a></div>
                             </tr>
 
                             <tr>
@@ -66,14 +65,72 @@
                                     Driver Name
                                 </td>
                                 <td class="text-wrap">
-                                    {{driver.name}}
+                                    {{driver_pick.name}}
                                 </td>
                             </tr>  <tr>
                                 <td class="text-wrap">
                                     Driver Contact #
                                 </td>
                                 <td class="text-wrap">
-                                    {{driver.contact_number}}
+                                    {{driver_pick.contact_number}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                                 <p class="card-description">Drop</p>
+                                     <table class="table table-bordered">
+                        <thead>
+                        <tr>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-wrap">
+                                    Vehicle
+                                </td>
+                                <td class="text-wrap">
+                                    {{drop_vehicle.id}} - {{drop_vehicle}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Distance
+                                </td>
+                                <td class="text-wrap">
+                                    {{path_data_drop.distance}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Time
+                                </td>
+                                <td class="text-wrap">
+                                    {{path_data_drop.duration}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-wrap">
+                                    Route
+                                </td>
+                                <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
+                                                            target="_blank" href="{{path_data_drop.URL}}">Map </a></div>
+                            </tr>
+
+                            <tr>
+                                <td class="text-wrap">
+                                    Driver Name
+                                </td>
+                                <td class="text-wrap">
+                                    {{driver_drop.name}}
+                                </td>
+                            </tr>  <tr>
+                                <td class="text-wrap">
+                                    Driver Contact #
+                                </td>
+                                <td class="text-wrap">
+                                    {{driver_drop.contact_number}}
                                 </td>
                             </tr>
                         </tbody>

@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
-from .algorithms import k_means_algorithm, clarke_wright_savings_complete
+from .algorithms import k_means_algorithm, call_final_algo
 from .forms import EmployeeRegistrationForm, AdminRegistrationForm, EmployeeUserCreationForm, CustomAuthenticationForm, \
     UploadFileForm, VehicleForm, DriverForm, ShiftForm, DriverSelectionForm, ChangeRequestForm
 from .models import Employee, Department, JobTitle, Location, Shift, EmployeeUser, Driver, Vehicle, OptimizePaths, \
@@ -240,11 +240,11 @@ def execute_model(request):
     # model_execution goes here
     if request.POST:
         capacity = int(request.POST.get('capacity'))
+        no_of_vehicles = int(request.POST.get('no_of_vehicles'))
         shift = request.POST.get('shift')
         route_type = request.POST.get('route_type')
         first_level_algorithm = request.POST.get('first_level_algorithm')
         second_level_algorithm = request.POST.get('second_level_algorithm')
-        no_of_vehicles = int(request.POST.get('no_of_vehicles'))
 
         model_combination = create_model_combination(shift, route_type, first_level_algorithm, second_level_algorithm,
                                                      '', no_of_vehicles)
@@ -272,13 +272,9 @@ def execute_model(request):
 
             ### Start saving results  ###
 
-            if first_level_algorithm == 'kmeans':
-                final_route_dict = k_means_call(final_list_coord)
-
-            elif first_level_algorithm == 'clarke':
-                final_route_dict = clarke_call(final_list_coord, shift_object.shift_id,
-                                               route_type, capacity,
-                                               no_of_vehicles)
+            final_route_dict = call_algo(final_list_coord, shift_object.shift_id,
+                                         route_type, capacity,
+                                         no_of_vehicles, first_level_algorithm, second_level_algorithm)
 
             ### End saving results ###
             for final_route in final_route_dict:
@@ -287,6 +283,14 @@ def execute_model(request):
                 employees = []
                 employee_coordinates = []
                 employee_list = final_route_dict[final_route]['route_vertex_index']
+
+                # Convert each element in the list to an int
+                converted_employee_list = [int(x) for x in employee_list]
+
+                # Update the original dictionary with the converted list
+                final_route_dict[final_route]['route_vertex_index'] = converted_employee_list
+
+
                 create_vehicle_model_wise(model_combination, vehicle, final_route_dict[final_route])
                 seq_no = 1
                 idx = 0
@@ -305,7 +309,7 @@ def execute_model(request):
                 data = {"vehicle": vehicle, "employees": employees, "coordinates": employee_coordinates,
                         "distance": str(final_route_dict[final_route]['distance']),
                         "time": str(final_route_dict[final_route]['duration'])}
-                create_entries(vehicle, route_type, data)
+                #create_entries(vehicle, route_type, data)
                 data_list.append(data)
 
 
@@ -473,16 +477,39 @@ def manual_entry(request):
 
 
 def model_data_vehicle_wise(request):
-
     vehicles = Vehicle.objects.all()
     model_combs = None
+    model_combs_drop = None
+    selected_vehicle_obj = None
     if request.method == 'POST':
         selected_vehicle = request.POST.get('route')
+        model_comb_id = request.POST.get('model_id')
+        transit_type = request.POST.get('transit_type')
+
         if selected_vehicle:
-            model_combs = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle)
+            model_combs = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle, model_comb__type_id='pick')
+            model_combs_drop = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle, model_comb__type_id='drop')
+
+        if model_comb_id != '':
+            selected_model_comb = ModelResultVehicleWise.objects.get(vehicle_id=selected_vehicle, model_comb_id=model_comb_id)
+            vehicle = Vehicle.objects.get(id=selected_vehicle)
+            if transit_type == 'pick':
+                vehicle.path_data = selected_model_comb.id
+            else:
+                vehicle.path_data_drop = selected_model_comb.id
+
+            vehicle.save()
+            print(selected_vehicle)
+            print(model_comb_id)
+            print(transit_type)
+        selected_vehicle_obj = Vehicle.objects.get(id=selected_vehicle)
+
+
+
 
     return render(request, 'users/model_data_vehicle_wise.html',
-                  {'vehicles': vehicles, 'model_combs': model_combs}
+                  {'vehicles': vehicles, 'model_combs': model_combs,
+                   'model_combs_drop': model_combs_drop, 'selected_vehicle': selected_vehicle_obj}
                   )
 
 
@@ -542,28 +569,59 @@ def fetch_route_details(request):
 def employee_schedule(request):
     try:
         vehicles = Vehicle.objects.all()
-        path_data = None
+        path_data_pick = None
+        path_data_drop = None
+        pick_vehicle = None
+        drop_vehicle = None
+        driver_pick = None
+        driver_drop = None
 
         employee = get_object_or_404(Employee, user=request.user)
         if employee:
             emp_id = employee.employee_code
+
             for vehicle in vehicles:
                 if vehicle.path_data:
-                    if emp_id in vehicle.path_data['employees']:
-                        path_data = vehicle.path_data
-                        print(path_data)
-                    if path_data:
-                        try:
-                            driver_mapping = DriverVehicleMapping.objects.get(vehicle=vehicle)
-                        except:
-                            driver_mapping = None
-                        driver = driver_mapping.driver if driver_mapping else None
-    except:
-        path_data = None
-        driver = None
-    return render(request, 'users/employee_schedule.html', {'path_data': path_data,
+                    model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data)
+                    if int(emp_id) in model_wise.path_data['route_vertex_index']:
+                        path_data_pick = model_wise.path_data
+                        pick_vehicle = vehicle
+                        print(path_data_pick)
+                        break
+            if path_data_pick:
+                try:
+                    driver_mapping = DriverVehicleMapping.objects.get(vehicle=vehicle)
+                except:
+                    driver_mapping = None
+                driver_pick = driver_mapping.driver if driver_mapping else None
+
+        for vehicle in vehicles:
+            if vehicle.path_data_drop:
+                model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data_drop)
+                if int(emp_id) in model_wise.path_data['route_vertex_index']:
+                    path_data_drop = model_wise.path_data
+                    drop_vehicle = vehicle
+                    print(path_data_drop)
+                    break
+        if path_data_drop:
+            try:
+                driver_mapping = DriverVehicleMapping.objects.get(vehicle=drop_vehicle)
+            except:
+                driver_mapping = None
+            driver_drop = driver_mapping.driver if driver_mapping else None
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        path_data_pick = None
+        path_data_drop = None
+        driver_pick = None
+        driver_drop = None
+    return render(request, 'users/employee_schedule.html', {'path_data_pick': path_data_pick,'path_data_drop': path_data_drop,
                                                             'current_date': current_date.date,
-                                                            'driver': driver})
+                                                            'driver_pick': driver_pick,
+                                                            'driver_drop': driver_drop,
+                                                            'pick_vehicle' : pick_vehicle,
+                                                            'drop_vehicle' : drop_vehicle})
 
 
 def create_entries(vehicle_number, route_type, listing):
@@ -636,16 +694,10 @@ def change_request_list(request):
                   {'change_requests': change_requests})
 
 
-def k_means_call(final_list_coord):
+def call_algo(final_list_coord, shift_id, route_type, max_capacity, no_of_vehicles, first_level_algo,
+              second_level_algo):
     # Call the k-means algorithm with the list of coordinates
-    final_routed_dict = k_means_algorithm(final_list_coord)
-    print(final_routed_dict)
-    return final_routed_dict
-
-
-def clarke_call(final_list_coord, shift_id, route_type, max_capacity, no_of_vehicles):
-    # Call the k-means algorithm with the list of coordinates
-    final_routed_dict = clarke_wright_savings_complete(final_list_coord, shift_id, route_type, max_capacity,
-                                                       no_of_vehicles)
+    final_routed_dict = call_final_algo(final_list_coord, shift_id, route_type, max_capacity,
+                                        no_of_vehicles, first_level_algo, second_level_algo)
     print(final_routed_dict)
     return final_routed_dict

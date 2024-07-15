@@ -86,6 +86,15 @@ function submitForm()
 }
 
 
+function implementRoute(model_id, transit_type, selected_vehicle)
+{
+    document.getElementById('model_id').value = model_id;
+    document.getElementById('transit_type').value = transit_type;
+    document.getElementById('id_route').value = selected_vehicle;
+    submitForm()
+}
+
+
 
 function fetch_route_details(object)
 {
