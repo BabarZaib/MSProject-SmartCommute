@@ -86,11 +86,10 @@ function submitForm()
 }
 
 
-function implementRoute(model_id, transit_type, selected_vehicle)
+function implementRoute(model_id, transit_type)
 {
     document.getElementById('model_id').value = model_id;
     document.getElementById('transit_type').value = transit_type;
-    document.getElementById('id_route').value = selected_vehicle;
     submitForm()
 }
 

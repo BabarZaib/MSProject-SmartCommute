@@ -1,0 +1,120 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> Route Implementation </h4>
+
+                <form method="post" id="route_form" action="{% url 'implement_algorithm'%}">
+        {% csrf_token %}
+                  <!--  <div class="template-demo">
+                      <div class="row">
+                            <div class="col-md-3">
+                                Route/Vehicle :
+                            </div>
+                          <div class="col-md-9">
+                      <select class="form-control" name="route" id="id_route" onchange="submitForm()">
+                          <option value="">Select Vehicle</option>
+                          {% for vehicle in vehicles %}
+                          <option value="{{vehicle.id}}">{{vehicle.id}} - {{vehicle}}</option>
+                          {% endfor %}
+                      </select>
+                      </div>
+                          </div>-->
+                                            <hr>
+ <br>
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                      <div class="table-responsive">
+
+                          <!--<h4 class="card-description">Route : {{selected_vehicle.id}} - {{selected_vehicle}} </h4>-->
+                          <p class="card-description" >Pick</p>
+                          <br>
+        <table class="table table-bordered" id="table_pick">
+            <thead>
+                <tr>
+                    <th>Model Combinations</th>
+                   <!-- <th>Employees</th>-->
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                    {%for model_comb in model_combs %}
+                    <tr>
+                        <td>{{model_comb}}</td>
+                        <!--<td>{{model_comb.path_data.route_vertex_index}}</td>-->
+                            <!--<td><div class="btn btn-success"><a class="text-decoration-none text-dark"
+                                                                target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
+                        </td>--><td>
+                         <input type="checkbox"
+           {% if model_comb.is_implemented %}checked{% endif %}
+           onchange="implementRoute('{{ model_comb.id }}', 'pick')"
+           name="implement">
+                    </td>
+                    </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+
+
+                          <br>
+                          <p class="card-description" >Drop</p>
+        <table class="table table-bordered" id="table_drop">
+            <thead>
+                <tr>
+                    <th>Model Combinations</th>
+
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                    {%for model_comb in model_combs_drop %}
+                    <tr>
+                        <td>{{model_comb}}</td>
+                       <!-- <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
+                                                            target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
+                        </td>--><td><input type="checkbox"
+                                        {% if model_comb.is_implemented %}checked{% endif %}
+                                        onchange="implementRoute({{model_comb.id}}, 'drop')"
+                                        name="implement"></td>
+                    </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+                      </div>
+                    <br>
+           <!-- <button type="submit" class="btn btn-primary">Save</button>-->
+                            <input type="hidden" id="model_id" name="model_id">
+                            <input type="hidden" id="transit_type" name="transit_type">
+
+
+    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

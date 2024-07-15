@@ -253,6 +253,7 @@ class ModelCombination(models.Model):
     first_level_algo = models.CharField(max_length=255, choices=ROUTE_TYPE_CHOICES)
     second_level_algo = models.CharField(max_length=255, blank=True, null=True)
     analysis = models.TextField(blank=True, null=True)
+    is_implemented = models.BooleanField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.shift.shift_id} - {self.type_id} - {self.first_level_algo} - {self.second_level_algo}"

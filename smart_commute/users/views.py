@@ -290,7 +290,6 @@ def execute_model(request):
                 # Update the original dictionary with the converted list
                 final_route_dict[final_route]['route_vertex_index'] = converted_employee_list
 
-
                 create_vehicle_model_wise(model_combination, vehicle, final_route_dict[final_route])
                 seq_no = 1
                 idx = 0
@@ -309,7 +308,7 @@ def execute_model(request):
                 data = {"vehicle": vehicle, "employees": employees, "coordinates": employee_coordinates,
                         "distance": str(final_route_dict[final_route]['distance']),
                         "time": str(final_route_dict[final_route]['duration'])}
-                #create_entries(vehicle, route_type, data)
+                # create_entries(vehicle, route_type, data)
                 data_list.append(data)
 
 
@@ -488,10 +487,12 @@ def model_data_vehicle_wise(request):
 
         if selected_vehicle:
             model_combs = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle, model_comb__type_id='pick')
-            model_combs_drop = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle, model_comb__type_id='drop')
+            model_combs_drop = ModelResultVehicleWise.objects.filter(vehicle_id=selected_vehicle,
+                                                                     model_comb__type_id='drop')
 
         if model_comb_id != '':
-            selected_model_comb = ModelResultVehicleWise.objects.get(vehicle_id=selected_vehicle, model_comb_id=model_comb_id)
+            selected_model_comb = ModelResultVehicleWise.objects.get(vehicle_id=selected_vehicle,
+                                                                     model_comb_id=model_comb_id)
             vehicle = Vehicle.objects.get(id=selected_vehicle)
             if transit_type == 'pick':
                 vehicle.path_data = selected_model_comb.id
@@ -504,12 +505,42 @@ def model_data_vehicle_wise(request):
             print(transit_type)
         selected_vehicle_obj = Vehicle.objects.get(id=selected_vehicle)
 
-
-
-
     return render(request, 'users/model_data_vehicle_wise.html',
                   {'vehicles': vehicles, 'model_combs': model_combs,
                    'model_combs_drop': model_combs_drop, 'selected_vehicle': selected_vehicle_obj}
+                  )
+
+
+def implement_algorithm(request):
+    vehicles = Vehicle.objects.all()
+    model_combs = None
+    model_combs_drop = None
+    selected_vehicle_obj = None
+    model_combs = ModelCombination.objects.filter(type_id='pick')
+    model_combs_drop = ModelCombination.objects.filter(type_id='drop')
+
+    if request.method == 'POST':
+        model_comb_id = request.POST.get('model_id')
+        transit_type = request.POST.get('transit_type')
+
+        if model_comb_id != '':
+            model_comb = ModelCombination.objects.get(id=model_comb_id)
+            selected_model_comb = ModelResultVehicleWise.objects.filter(model_comb_id=model_comb_id)
+            for vehicle_wise in selected_model_comb:
+                vehicle = Vehicle.objects.get(id=vehicle_wise.vehicle_id)
+                if transit_type == 'pick':
+                    vehicle.path_data = vehicle_wise.id
+                else:
+                    vehicle.path_data_drop = vehicle_wise.id
+
+                vehicle.save()
+            model_comb.is_implemented = True
+            model_comb.save()
+
+
+    return render(request, 'users/implement_algorithm.html',
+                  {'model_combs': model_combs,
+                   'model_combs_drop': model_combs_drop}
                   )
 
 
@@ -616,12 +647,13 @@ def employee_schedule(request):
         path_data_drop = None
         driver_pick = None
         driver_drop = None
-    return render(request, 'users/employee_schedule.html', {'path_data_pick': path_data_pick,'path_data_drop': path_data_drop,
-                                                            'current_date': current_date.date,
-                                                            'driver_pick': driver_pick,
-                                                            'driver_drop': driver_drop,
-                                                            'pick_vehicle' : pick_vehicle,
-                                                            'drop_vehicle' : drop_vehicle})
+    return render(request, 'users/employee_schedule.html',
+                  {'path_data_pick': path_data_pick, 'path_data_drop': path_data_drop,
+                   'current_date': current_date.date,
+                   'driver_pick': driver_pick,
+                   'driver_drop': driver_drop,
+                   'pick_vehicle': pick_vehicle,
+                   'drop_vehicle': drop_vehicle})
 
 
 def create_entries(vehicle_number, route_type, listing):
