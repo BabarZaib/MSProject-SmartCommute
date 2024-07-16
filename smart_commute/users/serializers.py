@@ -58,4 +58,4 @@ class ModelCombinationDataSerializerRoute(serializers.ModelSerializer):
 class ModelCombinationDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModelWiseEmployeeRoute
-        fields = ['id', 'vehicle_id', 'sequence_no', 'distance', 'time']
+        fields = ['id', 'vehicle_id', 'sequence_no', 'distance', 'time', 'URL']

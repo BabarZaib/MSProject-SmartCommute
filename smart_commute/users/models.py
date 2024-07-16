@@ -266,6 +266,7 @@ class ModelWiseEmployeeRoute(models.Model):
     sequence_no = models.IntegerField()
     distance = models.FloatField()
     time = models.FloatField()
+    URL = models.TextField(blank=True)
 
     def __str__(self):
         return f"Route for Vehicle {self.vehicle.id}, Employee {self.employee.employee_code}, Sequence {self.sequence_no}"

@@ -67,7 +67,7 @@
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item nav-date dropdown">
             <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
-              <h6 class="date mb-0">Today : Mar 23</h6>
+              <h6 class="date mb-0">Today : {{current_date}}</h6>
               <i class="typcn typcn-calendar"></i>
             </a>
           </li>
@@ -523,7 +523,7 @@
          {% block content %}
         <div class="content-wrapper">
 <div class="row">
-            <div class="col-xl-4 grid-margin stretch-card">
+         <!--   <div class="col-xl-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body border-bottom">
                   <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -589,7 +589,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div>-->
             <div class="col-md-6 col-xl-4 grid-margin stretch-card">
               <div class="row">
                 <div class="col-md-12 grid-margin  stretch-card">
@@ -606,12 +606,12 @@
                           <p class="text-white text-center text-md-left">{{employee.user.email}}</p>
                           <div class="d-flex align-items-center justify-content-between info pt-2">
                             <div>
-                              <p class="text-white font-weight-bold">Birth date</p>
-                              <p class="text-white font-weight-bold">Birth city</p>
+                              <p class="text-white font-weight-bold">Code</p>
+                              <p class="text-white font-weight-bold">Address</p>
                             </div>
                             <div>
-                              <p class="text-white">16 Sep 2019</p>
-                              <p class="text-white">Netherlands</p>
+                              <p class="text-white">{{employee.employee_code}}</p>
+                              <p class="text-white">{{employee.address1}}</p>
                             </div>
                           </div>
                         </div>
@@ -619,7 +619,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-12  stretch-card">
+                <!--<div class="col-md-12  stretch-card">
                   <div class="card newsletter-card bg-gradient-warning">
                     <div class="card-body">
                       <div class="d-flex flex-column align-items-center justify-content-center h-100">
@@ -633,11 +633,11 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>-->
 
               </div>
             </div>
-            <div class="col-md-6 col-xl-4 grid-margin stretch-card">
+        <!--    <div class="col-md-6 col-xl-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body border-bottom">
                   <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -661,7 +661,7 @@
                   <canvas id="sales-chart-d" height="323" style="display: block; height: 361px; width: 339px;" width="303" class="chartjs-render-monitor"></canvas>
                 </div>
               </div>
-            </div>
+            </div>-->
           </div>
 
         </div>

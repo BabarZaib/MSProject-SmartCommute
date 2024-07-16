@@ -63,7 +63,7 @@ def employee_registration(request):
                                                                 'emp_id': emp_id,
 
                                                                 # 'carrier_message': carrier_form.
-                                                                'success_message': success_message})
+                                                                'success_message': success_message, 'current_date': current_date.date, })
 
 
 def edit_employee(request, emp_id):
@@ -105,7 +105,8 @@ def admin_registration(request):
 
 
 def dashboard(request):
-    return render(request, 'users/dashboard.html')
+
+    return render(request, 'users/dashboard.html', {'current_date': current_date.date, })
 
 
 def emp_dashboard(request):
@@ -119,7 +120,7 @@ def index(request):
 
 def all_employees(request):
     employees = Employee.objects.all()
-    return render(request, 'users/all_employees.html', {'employees': employees})
+    return render(request, 'users/all_employees.html', {'employees': employees, 'current_date': current_date.date, })
 
 
 def signin_view(request):
@@ -219,10 +220,10 @@ def create_model_combination(shift, route_type, first_level_algorithm, second_le
                                                no_of_vehicles=no_of_vehicles)
 
 
-def create_modelwise_employee_route(model_comb, vehicle_id, emp_id, seq_no, distance, time):
+def create_modelwise_employee_route(model_comb, vehicle_id, emp_id, seq_no, distance, time, URL):
     # Create new entry after deleting old entries
     return ModelWiseEmployeeRoute.objects.create(model_comb=model_comb, vehicle_id=vehicle_id,
-                                                 employee_id=emp_id, sequence_no=seq_no, distance=distance, time=time)
+                                                 employee_id=emp_id, sequence_no=seq_no, distance=distance, time=time, URL=URL)
 
 
 def create_vehicle_model_wise(model_combination, vehicle, param):
@@ -303,8 +304,9 @@ def execute_model(request):
                         employee_coordinates.append(emp.coordinates)
                         employee_distance = float(final_route_dict[final_route]['individual_distances'][idx])
                         employee_time = float(final_route_dict[final_route]['individual_durations'][idx])
+                        URL = final_route_dict[final_route]['URL']
                         create_modelwise_employee_route(model_combination, vehicle, emp.id, seq_no, employee_distance,
-                                                        employee_time)
+                                                        employee_time, URL)
                         seq_no += 1
                         idx += 1
 
@@ -326,7 +328,7 @@ def execute_model(request):
                 "time": "1 hour"}
     return render(request, 'users/execute_model.html', {"shifts": shifts,
                                                         "data": data, "data_list": data_list, 'route_type': route_type,
-                                                        'message': message})
+                                                        'message': message, 'current_date': current_date.date, })
 
 
 @csrf_exempt
@@ -376,7 +378,7 @@ def bulk_employee_upload(request):
     else:
         upload_form = UploadFileForm()
 
-    return render(request, 'users/bulk_employee_upload.html', {'upload_form': upload_form})
+    return render(request, 'users/bulk_employee_upload.html', {'upload_form': upload_form, 'current_date': current_date.date, })
 
 
 def logout_view(request):
@@ -396,7 +398,7 @@ def vehicle_form(request):
     else:
         form = VehicleForm()
 
-    return render(request, 'users/vehicle_form.html', {'form': form})
+    return render(request, 'users/vehicle_form.html', {'form': form, 'current_date': current_date.date, })
 
 
 def driver_form(request):
@@ -408,7 +410,7 @@ def driver_form(request):
     else:
         form = DriverForm()
 
-    return render(request, 'users/driver_form.html', {'form': form})
+    return render(request, 'users/driver_form.html', {'form': form, 'current_date': current_date.date, })
 
 
 def shift_setup(request):
@@ -424,7 +426,7 @@ def shift_setup(request):
     else:
         form = ShiftForm()
 
-    return render(request, 'users/shift_setup.html', {'form': form, "shifts": shifts})
+    return render(request, 'users/shift_setup.html', {'form': form, "shifts": shifts, 'current_date': current_date.date, })
 
 
 def vehicle_list(request):
@@ -435,14 +437,14 @@ def vehicle_list(request):
             vehicle_instance = Vehicle.objects.get(pk=vehicle_id)
             form = VehicleForm(instance=vehicle_instance)
             return render(request, 'users/vehicle_form.html', {'form': form, 'edit_vehicle': True,
-                                                               'vehicle_id': vehicle_id})
+                                                               'vehicle_id': vehicle_id, 'current_date': current_date.date, })
     else:
-        return render(request, 'users/vehicle_list.html', {'vehicles': vehicles})
+        return render(request, 'users/vehicle_list.html', {'vehicles': vehicles, 'current_date': current_date.date, })
 
 
 def driver_list(request):
     drivers = Driver.objects.all()
-    return render(request, 'users/driver_list.html', {'drivers': drivers})
+    return render(request, 'users/driver_list.html', {'drivers': drivers, 'current_date': current_date.date, })
 
 
 def model_wise_employee_route(request):
@@ -459,14 +461,14 @@ def model_wise_employee_route(request):
 
     return render(request, 'users/model_wise_employee_route.html',
                   {'model_wise_data': model_wise_data,
-                   'model_combinations': model_combinations, 'model_comb': model_combination})
+                   'model_combinations': model_combinations, 'model_comb': model_combination, 'current_date': current_date.date, })
 
 
 def compare_models(request):
     model_combs = ModelCombination.objects.all()
     employee_list = Employee.objects.all()
     return render(request, 'users/compare_models.html',
-                  {'model_combs': model_combs, 'employee_list': employee_list}
+                  {'model_combs': model_combs, 'employee_list': employee_list, 'current_date': current_date.date, }
                   )
 
 
@@ -474,7 +476,7 @@ def manual_entry(request):
     vehicles = Vehicle.objects.all()
     employee_list = Employee.objects.all()
     return render(request, 'users/manual_entry.html',
-                  {'vehicles': vehicles, 'employee_list': employee_list}
+                  {'vehicles': vehicles, 'employee_list': employee_list, 'current_date': current_date.date, }
                   )
 
 
@@ -510,7 +512,7 @@ def model_data_vehicle_wise(request):
 
     return render(request, 'users/model_data_vehicle_wise.html',
                   {'vehicles': vehicles, 'model_combs': model_combs,
-                   'model_combs_drop': model_combs_drop, 'selected_vehicle': selected_vehicle_obj}
+                   'model_combs_drop': model_combs_drop, 'selected_vehicle': selected_vehicle_obj, 'current_date': current_date.date, }
                   )
 
 
@@ -544,7 +546,7 @@ def implement_algorithm(request):
 
     return render(request, 'users/implement_algorithm.html',
                   {'model_combs': model_combs,
-                   'model_combs_drop': model_combs_drop}
+                   'model_combs_drop': model_combs_drop, 'current_date': current_date.date, }
                   )
 
 
@@ -610,17 +612,25 @@ def employee_schedule(request):
         drop_vehicle = None
         driver_pick = None
         driver_drop = None
+        indv_distance_pick = None
+        indv_duration_pick = None
+        indv_distance_drop = None
+        indv_duration_drop = None
 
         employee = get_object_or_404(Employee, user=request.user)
         if employee:
             emp_id = employee.employee_code
 
+
             for vehicle in vehicles:
                 if vehicle.path_data:
-                    model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data)
+                    model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data, model_comb_id__type_id='pick')
                     if int(emp_id) in model_wise.path_data['route_vertex_index']:
+                        index = model_wise.path_data['route_vertex_index'].index(int(emp_id))
                         path_data_pick = model_wise.path_data
                         pick_vehicle = vehicle
+                        indv_distance_pick = path_data_pick['individual_distances'][index]
+                        indv_duration_pick = path_data_pick['individual_durations'][index]
                         print(path_data_pick)
                         break
             if path_data_pick:
@@ -632,10 +642,14 @@ def employee_schedule(request):
 
         for vehicle in vehicles:
             if vehicle.path_data_drop:
-                model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data_drop)
+                model_wise = ModelResultVehicleWise.objects.get(id=vehicle.path_data_drop,  model_comb_id__type_id='drop')
                 if int(emp_id) in model_wise.path_data['route_vertex_index']:
+                    index = model_wise.path_data['route_vertex_index'].index(int(emp_id))
                     path_data_drop = model_wise.path_data
+
                     drop_vehicle = vehicle
+                    indv_distance_drop = path_data_drop['individual_distances'][index-1]
+                    indv_duration_drop = path_data_drop['individual_durations'][index-1]
                     print(path_data_drop)
                     break
         if path_data_drop:
@@ -651,13 +665,25 @@ def employee_schedule(request):
         path_data_drop = None
         driver_pick = None
         driver_drop = None
+        pick_vehicle = None
+        drop_vehicle = None
+        indv_distance_pick = None
+        indv_duration_pick = None
+        indv_distance_drop = None
+        indv_duration_drop = None
+
     return render(request, 'users/employee_schedule.html',
                   {'path_data_pick': path_data_pick, 'path_data_drop': path_data_drop,
                    'current_date': current_date.date,
                    'driver_pick': driver_pick,
                    'driver_drop': driver_drop,
                    'pick_vehicle': pick_vehicle,
-                   'drop_vehicle': drop_vehicle})
+                   'drop_vehicle': drop_vehicle,
+                   'indv_distance_pick' : indv_distance_pick,
+                   'indv_duration_pick' : indv_duration_pick,
+                   'indv_distance_drop' : indv_distance_drop,
+                   'indv_duration_drop' : indv_duration_drop
+                   })
 
 
 def create_entries(vehicle_number, route_type, listing):
@@ -696,7 +722,7 @@ def driver_vehicle_mapping_view(request):
                 'driver': drivermapping_set.driver if drivermapping_set is not None else None})
         forms.append(form)
     vehicle_form_pairs = zip(vehicles, forms)
-    context = {'vehicle_form_pairs': vehicle_form_pairs}
+    context = {'vehicle_form_pairs': vehicle_form_pairs, 'current_date': current_date.date, }
     return render(request, 'users/driver_vehicle_mapping.html', context)
 
 
@@ -714,7 +740,7 @@ def create_change_request(request):
             return redirect('change_request_list')
     else:
         form = ChangeRequestForm()
-    return render(request, 'users/change_request_form.html', {'form': form})
+    return render(request, 'users/change_request_form.html', {'form': form, 'current_date': current_date.date, })
 
 
 def change_request_list(request):
@@ -727,7 +753,7 @@ def change_request_list(request):
     else:
         change_requests = None
     return render(request, 'users/change_request_list.html',
-                  {'change_requests': change_requests})
+                  {'change_requests': change_requests, 'current_date': current_date.date, })
 
 
 def call_algo(final_list_coord, shift_id, route_type, max_capacity, no_of_vehicles, first_level_algo,
@@ -775,5 +801,5 @@ def map_employees_to_vehicle(request):
         'vehicles': vehicles,
         'employees': employees,
         'selected_vehicle': selected_vehicle,
-        'current_mappings': current_mappings
+        'current_mappings': current_mappings, 'current_date': current_date.date,
     })

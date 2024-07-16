@@ -150,10 +150,12 @@ function fetch_route_details(object)
                         $('#seq_model1').html(data[0].sequence_no)
                         $('#duration_model1').html(Math.round(parseFloat(data[0].time), 2) + " Minutes")
                         $('#distance_model1').html(data[0].distance + " KM")
+                        $('#map1_URL').attr('href', data[0].URL)
                         $('#route_model2').html(data[1].vehicle_id)
                         $('#seq_model2').html(data[1].sequence_no)
                         $('#duration_model2').html((Math.round(parseFloat(data[0].time), 2) +  " Minutes"))
                         $('#distance_model2').html(data[1].distance + " KM")
+                        $('#map2_URL').attr('href', data[1].URL)
 
                     }
                 });
