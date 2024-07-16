@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.forms import modelformset_factory, BaseModelFormSet
 
-from .models import Employee, Admin, EmployeeUser, Vehicle, Driver, Shift, DriverVehicleMapping, ChangeRequest
+from .models import Employee, Admin, EmployeeUser, Vehicle, Driver, Shift, DriverVehicleMapping, ChangeRequest, \
+    EmployeeVehicleMapping
 
 
 class EmployeeRegistrationForm(forms.ModelForm):
@@ -186,6 +188,7 @@ class ChangeRequestForm(forms.ModelForm):
     class Meta:
         model = ChangeRequest
         fields = ['request_type', 'old_value', 'new_value', 'reason']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # del self.fields['username']
@@ -195,3 +198,43 @@ class ChangeRequestForm(forms.ModelForm):
                 'placeholder': self.fields[name].label,
                 'class': 'form-control  form-control-user',
             })
+
+
+class EmployeeVehicleMappingForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeVehicleMapping
+        fields = ['employee']
+
+    def __init__(self, *args, **kwargs):
+        # Get the list of selected employees from the view
+        selected_employees = kwargs.pop('selected_employees', [])
+        super(EmployeeVehicleMappingForm, self).__init__(*args, **kwargs)
+
+        # Exclude already selected employees
+        self.fields['employee'].queryset = Employee.objects.exclude(id__in=selected_employees)
+
+        # del self.fields['username']
+        for name in self.fields.keys():
+            field = self.fields[name]
+            self.fields[name].widget.attrs.update({
+                'placeholder': self.fields[name].label,
+                'class': 'form-control  form-control-user',
+            })
+
+
+class BaseEmployeeVehicleMappingFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        self.selected_employees = kwargs.pop('selected_employees', [])
+        super(BaseEmployeeVehicleMappingFormSet, self).__init__(*args, **kwargs)
+
+    def add_fields(self, form, index):
+        super(BaseEmployeeVehicleMappingFormSet, self).add_fields(form, index)
+        form.fields['employee'].queryset = Employee.objects.exclude(id__in=self.selected_employees)
+        if form.instance.pk:
+            # Exclude the current instance's employee from the exclusion list
+            form.fields['employee'].queryset |= Employee.objects.filter(id=form.instance.employee.id)
+            self.selected_employees.append(form.instance.employee.id)
+
+
+EmployeeVehicleMappingFormSet = modelformset_factory(EmployeeVehicleMapping, form=EmployeeVehicleMappingForm,
+                                                     formset=BaseEmployeeVehicleMappingFormSet, extra=9)

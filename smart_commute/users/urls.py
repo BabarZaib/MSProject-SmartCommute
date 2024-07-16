@@ -3,7 +3,7 @@ from .views import dashboard, admin_registration, employee_registration, index, 
     execute_model, execute_model_ajax, shift_setup, employee_schedule, driver_vehicle_mapping_view, \
     create_change_request, change_request_list, change_type_onchange, model_wise_employee_route, compare_models, \
     change_model, fetch_routes, fetch_route_details, manual_entry, model_data_vehicle_wise, fetch_model_vehicle_data, \
-    implement_algorithm
+    implement_algorithm, map_employees_to_vehicle
 from django.urls import path
 
 
@@ -39,4 +39,6 @@ urlpatterns = [
     path('model_data_vehicle_wise/', model_data_vehicle_wise, name='model_data_vehicle_wise'),
     path('implement_algorithm/', implement_algorithm, name='implement_algorithm'),
     path('fetch_model_vehicle_data/', fetch_model_vehicle_data, name='fetch_model_vehicle_data'),
+    path('map_employees_to_vehicle/', map_employees_to_vehicle, name='map_employees_to_vehicle'),
+
 ]

@@ -10,14 +10,17 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from .algorithms import k_means_algorithm, call_final_algo
 from .forms import EmployeeRegistrationForm, AdminRegistrationForm, EmployeeUserCreationForm, CustomAuthenticationForm, \
-    UploadFileForm, VehicleForm, DriverForm, ShiftForm, DriverSelectionForm, ChangeRequestForm
+    UploadFileForm, VehicleForm, DriverForm, ShiftForm, DriverSelectionForm, ChangeRequestForm, \
+    EmployeeVehicleMappingFormSet
 from .models import Employee, Department, JobTitle, Location, Shift, EmployeeUser, Driver, Vehicle, OptimizePaths, \
-    DriverVehicleMapping, ChangeRequest, ModelCombination, ModelWiseEmployeeRoute, ModelResultVehicleWise
+    DriverVehicleMapping, ChangeRequest, ModelCombination, ModelWiseEmployeeRoute, ModelResultVehicleWise, \
+    EmployeeVehicleMapping
 from .serializers import ModelCombinationSerializer, ModelCombinationDataSerializer, \
     ModelCombinationDataSerializerRoute, ModelVehicleSerializer
 
@@ -539,7 +542,6 @@ def implement_algorithm(request):
             model_comb.is_implemented = True
             model_comb.save()
 
-
     return render(request, 'users/implement_algorithm.html',
                   {'model_combs': model_combs,
                    'model_combs_drop': model_combs_drop}
@@ -735,3 +737,43 @@ def call_algo(final_list_coord, shift_id, route_type, max_capacity, no_of_vehicl
                                         no_of_vehicles, first_level_algo, second_level_algo)
     print(final_routed_dict)
     return final_routed_dict
+
+
+def map_employees_to_vehicle(request):
+    vehicles = Vehicle.objects.all()
+
+    selected_vehicle_id = request.GET.get('vehicle_id')
+    selected_vehicle = Vehicle.objects.get(pk=selected_vehicle_id) if selected_vehicle_id else None
+
+    if request.method == 'POST':
+        vehicle_id = request.POST.get('vehicle_id')
+        vehicle = Vehicle.objects.get(pk=vehicle_id)
+
+        selected_employee_ids = request.POST.getlist('employees')
+
+        # Clear previous mappings for the vehicle
+        EmployeeVehicleMapping.objects.filter(vehicle=vehicle).delete()
+
+        for employee_id in selected_employee_ids:
+            employee = Employee.objects.get(pk=employee_id)
+            # Create the mapping
+            EmployeeVehicleMapping.objects.create(vehicle=vehicle, employee=employee)
+
+        return redirect(reverse('map_employees_to_vehicle') + f'?vehicle_id={vehicle_id}')
+
+    mapped_employee_ids = EmployeeVehicleMapping.objects.exclude(vehicle=selected_vehicle).values_list('employee_id',
+                                                                                                       flat=True)
+    employees = Employee.objects.exclude(id__in=mapped_employee_ids)
+
+    # Get currently mapped employees for the selected vehicle
+    current_mappings = []
+    if selected_vehicle:
+        current_mappings = EmployeeVehicleMapping.objects.filter(vehicle=selected_vehicle).values_list('employee_id',
+                                                                                                       flat=True)
+
+    return render(request, 'users/map_employees_to_vehicle.html', {
+        'vehicles': vehicles,
+        'employees': employees,
+        'selected_vehicle': selected_vehicle,
+        'current_mappings': current_mappings
+    })

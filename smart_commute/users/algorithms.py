@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 
 import numpy as np
 from sklearn.cluster import KMeans
@@ -14,9 +15,9 @@ from datetime import datetime, timedelta
 import pytz
 import requests
 
+from users.models import EmployeeVehicleMapping
+
 api_key = 'AIzaSyDKuB9ZdvWA6BvD65w2X-P88Ejzj79_s8I'
-
-
 
 
 def call_final_algo(coordinates, shift_id, type_transit, max_capacity, num_routes, first_level_algo, second_level_algo):
@@ -255,6 +256,17 @@ def clarke_wright_savings(d_matrix, num_routes, max_route_length):
 
 
 def manual_process():
+    clusters = defaultdict(list)
+    mappings = EmployeeVehicleMapping.objects.all()
+
+    for mapping in mappings:
+        vehicle_id = mapping.vehicle.id
+        employee_id = int(mapping.employee.employee_code)
+        clusters[vehicle_id].append(employee_id)
+
+    # Convert the defaultdict to a standard dictionary
+    clusters_dict = dict(clusters)
+
     clusters = {0: [1, 2, 3, 4],
                 1: [5, 6, 7, 8, 9, 10, 11, 12],
                 2: [13, 14, 15, 16, 17, 18],
@@ -266,6 +278,8 @@ def manual_process():
                 8: [54, 54, 56, 57, 58, 59, 60, 61, 62, 63],
                 9: [64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74],
                 10: [75, 76, 77, 78, 79, 80]}
+
+    clusters = clusters_dict
     return clusters
 
 
@@ -293,6 +307,7 @@ def genetic_algorithm(num_routes, max_capacity):
                     8: [23, 27, 80, 71, 69, 64, 24, 26, 25],
                     9: [48, 50, 51, 53, 49, 43, 42, 41]}
     return clusters
+
 
 def k_means_algorithm(coordinates):
     # df_lat_lon = pd.read_csv('lat_lon_ec.csv')

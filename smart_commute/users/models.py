@@ -278,3 +278,11 @@ class ModelResultVehicleWise(models.Model):
 
     def __str__(self):
         return f"{self.model_comb}"
+
+
+class EmployeeVehicleMapping(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.vehicle.registration_no} - {self.employee.name}"

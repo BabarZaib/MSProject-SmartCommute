@@ -1,0 +1,91 @@
+{% extends "users/dashboard.html" %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Commute</title>
+</head>
+<body>
+{% block content %}
+<div class="content-wrapper">
+
+    <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> Employee Mapping </h4>
+                     <form method="get">
+                          <div class="template-demo">
+                      <div class="row">
+                           <!-- <div class="col-md-3">
+                                Route/Vehicle :
+                            </div>-->
+                          <div class="col-md-9">
+        <label for="vehicle">Select Vehicle:</label>
+        <select class="form-control" name="vehicle_id" id="vehicle" onchange="this.form.submit()">
+            <option value="">Select a vehicle</option>
+            {% for vehicle in vehicles %}
+                <option value="{{ vehicle.id }}" {% if vehicle.id == selected_vehicle.id %}selected{% endif %}>
+                    {{ vehicle.id }} - {{ vehicle.registration_no }}
+                </option>
+            {% endfor %}
+        </select>
+                          </div>
+                      </div>
+                          </div>
+    </form>
+
+                              <hr>
+ <br>
+                   <!-- <h1>h1. Heading</h1>
+                    <h2>h2. Heading</h2>
+                    <h3>h3. Heading</h3>
+                    <h4>h4. Heading</h4>
+                    <h5>h5. Heading</h5>
+                    <h6>h6. Heading</h6>-->
+                  </div>
+
+
+
+                        <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> Employees </h4>
+
+                      <div class="table-responsive">
+                          <br>
+                           {% if selected_vehicle %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vehicle_id" value="{{ selected_vehicle.id }}">
+               <table class="table table-hover">
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th align="right">Select</th>
+                    <th> <button class="btn btn-primary" type="submit">Save</button></th>
+
+                </tr>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{employee.employee_code}} - {{ employee.first_name }} {{ employee.last_name }}</td>
+                        <td>{{ employee.address1 }}</td>
+                        <td>
+                            <input type="checkbox" name="employees" onchange="checkLimit(this)" value="{{ employee.id }}" {% if employee.id in current_mappings %}checked{% endif %}>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        </form>
+    {% endif %}
+
+                      </div></div>
+
+        </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

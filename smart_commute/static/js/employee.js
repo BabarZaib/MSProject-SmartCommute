@@ -85,6 +85,27 @@ function submitForm()
     form.submit()
 }
 
+function checkLimit(obj)
+{
+debugger;
+ var checkboxes = document.querySelectorAll('input[name="employees"]');
+            var maxChecked = 9;
+            if(!obj.checked)
+            {
+            return;
+            }
+
+            checkboxes.forEach(checkbox => {
+
+                    let checkedCount = document.querySelectorAll('input[name="employees"]:checked').length;
+                    if (checkedCount > maxChecked) {
+                        alert(`You can only select up to ${maxChecked} employees.`);
+                        this.checked = false;
+                    }
+
+            });
+}
+
 
 function implementRoute(model_id, transit_type)
 {
