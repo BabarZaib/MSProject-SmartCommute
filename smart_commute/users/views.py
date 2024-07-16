@@ -521,6 +521,7 @@ def implement_algorithm(request):
 
     if request.method == 'POST':
         model_comb_id = request.POST.get('model_id')
+        model_comb_id = request.POST.get('model_id')
         transit_type = request.POST.get('transit_type')
 
         if model_comb_id != '':
@@ -534,6 +535,7 @@ def implement_algorithm(request):
                     vehicle.path_data_drop = vehicle_wise.id
 
                 vehicle.save()
+            ModelCombination.objects.filter(type_id=transit_type).update(is_implemented=False)
             model_comb.is_implemented = True
             model_comb.save()
 

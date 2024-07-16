@@ -86,7 +86,7 @@ def call_final_algo(coordinates, shift_id, type_transit, max_capacity, num_route
         print("calculate distance matrix")
 
     clusters = []
-    if first_level_algo == 'clarke':
+    if first_level_algo == 'CWS':
         num_routes = distance_matrix.shape[0]
         routes = clarke_wright_savings(distance_matrix, num_routes=num_routes, max_route_length=max_capacity)
         # Output the routes
@@ -107,7 +107,7 @@ def call_final_algo(coordinates, shift_id, type_transit, max_capacity, num_route
             coordinates_list += [selected_vertices]
         save_folium_map(coordinates_list, 'clarke_wright_savings')
 
-    elif first_level_algo == 'min-dist':
+    elif first_level_algo == 'min_dist':
         clusters = minimum_distance(distance_matrix, coordinates, max_capacity, num_routes)
     elif first_level_algo == 'manual':
         clusters = manual_process()
@@ -455,7 +455,7 @@ def travellingSalesmanProblem(graph, graph_time, s, first_level_algo, type_trans
             vertex.append(i)
     # print(vertex)
     # store minimum weight Hamiltonian Cycle
-    if first_level_algo == 'clarke':
+    if first_level_algo == 'CWS':
         if len(vertex) > 8:
             min_path, optim_route = 99999, [s] + list(vertex)
             # print(min_path, optim_route)

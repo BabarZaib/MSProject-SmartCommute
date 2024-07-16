@@ -66,12 +66,12 @@
                         <!--<td>{{model_comb.path_data.route_vertex_index}}</td>-->
                         <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
                                                             target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
-                        </td><td>
+                        </td><!--<td>
                          <input type="checkbox"
            {% if selected_vehicle.path_data == model_comb.id %}checked{% endif %}
            onchange="implementRoute('{{ model_comb.model_comb_id }}', 'pick', '{{ selected_vehicle.id }}')"
            name="implement">
-                    </td>
+                    </td>-->
                     </tr>
             {%endfor%}
             </tbody>
@@ -101,10 +101,10 @@
                         <!--<td>{{model_comb.path_data.route_vertex_index}}</td>-->
                         <td><div class="btn btn-success"><a class="text-decoration-none text-dark"
                                                             target="_blank" href="{{model_comb.path_data.URL}}">Map </a></div>
-                        </td><td><input type="checkbox"
+                        </td><!--<td><input type="checkbox"
                                         {% if selected_vehicle.path_data_drop == model_comb.id %}checked{% endif %}
                                         onchange="implementRoute({{model_comb.model_comb_id}}, 'drop', {{selected_vehicle.id}})"
-                                        name="implement"></td>
+                                        name="implement"></td>-->
                     </tr>
             {%endfor%}
             </tbody>
