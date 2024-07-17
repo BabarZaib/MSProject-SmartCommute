@@ -37,18 +37,18 @@ def call_final_algo(coordinates, shift_id, type_transit, max_capacity, num_route
         drop_time_hr = 17
         drop_time_min = 0
         if type_transit == 'pick':
-            df = pd.read_csv('smart_commute/Algorithm/input_data/EC/DM_pickup0800arrival.csv', header=None)
+            df = pd.read_csv('./smart_commute/Algorithm/input_data/EC/DM_pickup0800arrival.csv', header=None)
             distance_matrix = df.to_numpy()
-            df_t = pd.read_csv('smart_commute/Algorithm/input_data/EC/TM_pickup0800arrival.csv', header=None)
+            df_t = pd.read_csv('./smart_commute/Algorithm/input_data/EC/TM_pickup0800arrival.csv', header=None)
             time_matrix = df_t.to_numpy()
             shift_time_hr = pick_time_hr
             shift_time_min = pick_time_min
 
         elif type_transit == 'drop':
-            df = pd.read_csv('smart_commute/Algorithm/input_data/EC/DM_dropoff1700departure.csv', header=None)
+            df = pd.read_csv('./smart_commute/Algorithm/input_data/EC/DM_dropoff1700departure.csv', header=None)
             distance_matrix = df.to_numpy()
             distance_matrix = distance_matrix.transpose()
-            df_t = pd.read_csv('smart_commute/Algorithm/input_data/EC/TM_dropoff1700departure.csv', header=None)
+            df_t = pd.read_csv('./smart_commute/Algorithm/input_data/EC/TM_dropoff1700departure.csv', header=None)
             time_matrix = df_t.to_numpy()
             time_matrix = time_matrix.transpose()
             shift_time_hr = drop_time_hr
