@@ -105,8 +105,9 @@ def admin_registration(request):
 
 
 def dashboard(request):
-
-    return render(request, 'users/dashboard.html', {'current_date': current_date.date, })
+    pending_count = ChangeRequest.objects.filter(status='pending').count()
+    return render(request, 'users/dashboard.html', {'current_date': current_date.date,
+                                                    'pending_count' : pending_count})
 
 
 def emp_dashboard(request):

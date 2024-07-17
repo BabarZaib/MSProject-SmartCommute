@@ -396,7 +396,7 @@
 
           <li class="nav-item">
             <a class="nav-link" href="{% url 'map_employees_to_vehicle'%}">
-              <i class="fa-brands fa-buromobelexperte menu-icon"></i>
+              <i class="fas fa-user-cog menu-icon"></i>
               <span class="menu-title">Manual Clustering</span>
               <!--<div class="badge badge-danger">new</div>-->
             </a>
@@ -418,7 +418,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'compare_models'%}">
-              <i class="fa-solid fa-table menu-icon"></i>
+
+              <i class="fa-solid fa-greater-than-equal menu-icon"></i>
             <!--  <i class="fa-solid fa-table"></i>-->
               <span class="menu-title">Compare Models</span>
               <!--<div class="badge badge-danger">new</div>-->
@@ -426,7 +427,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'model_data_vehicle_wise'%}">
-              <i class="fa-solid fa-table menu-icon"></i>
+              <i class="fas fa-chart-line menu-icon"></i>
             <!--  <i class="fa-solid fa-table"></i>-->
               <span class="menu-title">Route Analysis</span>
               <!--<div class="badge badge-danger">new</div>-->
@@ -434,7 +435,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'implement_algorithm'%}">
-              <i class="fa-solid fa-table menu-icon"></i>
+
+              <i class="fa-solid fa-location-dot menu-icon"></i>
             <!--  <i class="fa-solid fa-table"></i>-->
               <span class="menu-title">Route Implement</span>
               <!--<div class="badge badge-danger">new</div>-->
@@ -464,6 +466,9 @@
             <a class="nav-link" href="{% url 'change_request_list_admin'%}" >
               <i class="fa-solid fa-bolt menu-icon"></i>
               <span class="menu-title">Change Requests</span>
+              {% if pending_count %}
+               <div class="badge badge-danger">{{pending_count}}</div>
+              {% endif %}
 
             </a>
           </li>
