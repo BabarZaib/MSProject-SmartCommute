@@ -30,7 +30,7 @@
         <tr>
             <td>{{ request.get_request_type_display }}</td>
             <td>{{ request.old_value }} -> {{ request.new_value }}</td>
-            <td><label class="badge badge-danger">{{ request.get_status_display }}</label></td>
+                          <td><label {% if request.status == 'pending' %} class="badge badge-warning" {%elif request.status == 'denied' %} class="badge badge-danger" {%else%} class="badge badge-success" {%endif%}>{{ request.get_status_display }}</label></td>
         </tr>
         {% endfor %}
     </tbody>

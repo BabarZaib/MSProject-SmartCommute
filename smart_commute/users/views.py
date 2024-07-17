@@ -756,6 +756,35 @@ def change_request_list(request):
                   {'change_requests': change_requests, 'current_date': current_date.date, })
 
 
+def change_request_list_admin(request):
+    change_requests = ChangeRequest.objects.all()
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action:
+            action_type, request_id = action.split('-')
+            try:
+                change_request = ChangeRequest.objects.get(id=request_id)
+                emp_id = change_request.employee_id
+                employee = Employee.objects.get(id=emp_id)
+
+                if action_type == 'approve':
+                    change_request.status = 'approved'  # Update with your actual status field values
+                    if change_request.request_type == 'address':
+                        employee.address1 = change_request.new_value
+                        employee.save()
+                    messages.success(request, 'Change request approved successfully.')
+                elif action_type == 'denied':
+                    change_request.status = 'denied'  # Update with your actual status field values
+                    messages.success(request, 'Change request rejected successfully.')
+                change_request.save()
+            except ChangeRequest.DoesNotExist:
+                messages.error(request, 'Change request not found.')
+
+    return render(request, 'users/change_request_list_admin.html',
+                  {'change_requests': change_requests, 'current_date': current_date.date, })
+
+
+
 def call_algo(final_list_coord, shift_id, route_type, max_capacity, no_of_vehicles, first_level_algo,
               second_level_algo):
     # Call the k-means algorithm with the list of coordinates

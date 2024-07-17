@@ -220,8 +220,6 @@ class DriverVehicleMapping(models.Model):
 class ChangeRequest(models.Model):
     REQUEST_TYPE_CHOICES = [
         ('address', 'Address'),
-        ('shift', 'Shift'),
-        ('vehicle', 'Vehicle'),
     ]
     STATUS_CHOICES = [
         ('pending', 'Pending'),
